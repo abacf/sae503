@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import argparse
-
 from jinja2 import Environment, PackageLoader, select_autoescape
 env = Environment(
     loader=PackageLoader("gen"),
@@ -14,8 +12,15 @@ env = {
   "dev": {
     "queues": ["rubis", "emeraude", "saphir", "diamant"]
   },
+  "prod": {
+    "queues": ["rubis", "emeraude", "saphir", "diamant"]
+  },
+  "test": {
+    "queues": ["rubis", "emeraude", "saphir", "diamant"]
+  }
 }
 
 
-with open("deploy.yaml", "wt") as f:
-  f.write(template.render(env=env, image="ghcr.io/abacf/sae503:1.0.0", base_domain="192.168.1.52.nip.io",))
+for namespace in env:
+  with open(f"deploy-{namespace}.yaml", "wt") as f:
+    f.write(template.render(env={namespace: env[namespace]}, image="ghcr.io/abacf/sae503:1.0.0", base_domain="192.168.1.52.nip.io",))
