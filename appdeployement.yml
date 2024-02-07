@@ -18,7 +18,13 @@ spec:
           image: ghcr.io/abacf/sae503:1.0.0
           ports:
             - containerPort: 8000
-          
+          env:
+            - name: REDIS_HOST
+              value: "redis"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: QUEUE_NAME
+              value: "test"
 ---
 apiVersion: v1
 kind: Service
