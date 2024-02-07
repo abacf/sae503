@@ -30,15 +30,15 @@ spec:
           args:
             - --api.insecure
             - --accesslog
-            - --entrypoints.web.Address=:8000
-            - --entrypoints.websecure.Address=:4443
+            - --entrypoints.web.Address=:80
+            - --entrypoints.websecure.Address=:443
             - --providers.kubernetescrd
             - --metrics.prometheus=true
           ports:
             - name: web
-              containerPort: 8000
+              containerPort: 80
             - name: websecure
-              containerPort: 4443
+              containerPort: 443
             - name: admin
               containerPort: 8080
             - name: prometheus

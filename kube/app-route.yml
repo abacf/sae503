@@ -10,5 +10,5 @@ spec:
     - match: Host(`app.172.18.200.171.nip.io`)
       kind: Rule
       services:
-        - name: app-production
+        - name: app-production-service
           port: 8000
