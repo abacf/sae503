@@ -16,3 +16,11 @@ run:
   --detach=false \
   --name=iut-stmalo-sae503 \
   localhost/iut-stmalo-sae503:1.0.0
+
+deploy-monitoring:
+  kubectl apply --server-side -f kube-prometheus/manifests/setup
+  kubectl wait \
+    --for condition=Established \
+    --all CustomResourceDefinition \
+    --namespace=monitoring
+  kubectl apply -f kube-prometheus/manifests/
