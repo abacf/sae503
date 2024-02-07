@@ -1,0 +1,345 @@
+---
+
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-dev-deployment
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9121"
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-dev-persistent-storage
+              mountPath: /data
+        - name: redis-exporter
+          image: oliver006/redis_exporter
+          ports:
+            - containerPort: 9121
+          volumeMounts:
+            - name: redis-dev-persistent-storage
+              mountPath: /data
+      volumes:
+        - name: redis-dev-persistent-storage
+          persistentVolumeClaim:
+            claimName: redis-dev-pv-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-dev-service
+  namespace: dev
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-dev-exporter-service
+  namespace: dev
+spec:
+  selector:
+    app: redis-exporter
+  ports:
+    - protocol: TCP
+      port: 9121
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-dev-pv-claim
+  namespace: dev
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-dev-rubis-deployment
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: app-dev-rubis
+      queue: rubis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: app-dev-rubis
+        queue: rubis
+    spec:
+      containers:
+        - name: app-dev-rubis
+          image: ghcr.io/abacf/sae503:1.0.0
+          ports:
+            - containerPort: 8000
+          env:
+            - name: REDIS_HOST
+              value: "redis-dev-service"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: QUEUE_NAME
+              value: "rubis"
+            - name: ENV
+              value: "dev"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-dev-rubis-service
+  namespace: dev
+spec:
+  selector:
+    app: app-dev-rubis
+    queue: rubis
+  ports:
+    - protocol: TCP
+      port: 8000
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app-dev-rubis-ingress
+  namespace: dev
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`dev-rubis.192.168.1.52.nip.io`)
+      kind: Rule
+      services:
+        - name: app-dev-rubis-service
+          port: 8000
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-dev-emeraude-deployment
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: app-dev-emeraude
+      queue: emeraude
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: app-dev-emeraude
+        queue: emeraude
+    spec:
+      containers:
+        - name: app-dev-emeraude
+          image: ghcr.io/abacf/sae503:1.0.0
+          ports:
+            - containerPort: 8000
+          env:
+            - name: REDIS_HOST
+              value: "redis-dev-service"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: QUEUE_NAME
+              value: "emeraude"
+            - name: ENV
+              value: "dev"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-dev-emeraude-service
+  namespace: dev
+spec:
+  selector:
+    app: app-dev-emeraude
+    queue: emeraude
+  ports:
+    - protocol: TCP
+      port: 8000
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app-dev-emeraude-ingress
+  namespace: dev
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`dev-emeraude.192.168.1.52.nip.io`)
+      kind: Rule
+      services:
+        - name: app-dev-emeraude-service
+          port: 8000
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-dev-saphir-deployment
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: app-dev-saphir
+      queue: saphir
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: app-dev-saphir
+        queue: saphir
+    spec:
+      containers:
+        - name: app-dev-saphir
+          image: ghcr.io/abacf/sae503:1.0.0
+          ports:
+            - containerPort: 8000
+          env:
+            - name: REDIS_HOST
+              value: "redis-dev-service"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: QUEUE_NAME
+              value: "saphir"
+            - name: ENV
+              value: "dev"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-dev-saphir-service
+  namespace: dev
+spec:
+  selector:
+    app: app-dev-saphir
+    queue: saphir
+  ports:
+    - protocol: TCP
+      port: 8000
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app-dev-saphir-ingress
+  namespace: dev
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`dev-saphir.192.168.1.52.nip.io`)
+      kind: Rule
+      services:
+        - name: app-dev-saphir-service
+          port: 8000
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-dev-diamant-deployment
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: app-dev-diamant
+      queue: diamant
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: app-dev-diamant
+        queue: diamant
+    spec:
+      containers:
+        - name: app-dev-diamant
+          image: ghcr.io/abacf/sae503:1.0.0
+          ports:
+            - containerPort: 8000
+          env:
+            - name: REDIS_HOST
+              value: "redis-dev-service"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: QUEUE_NAME
+              value: "diamant"
+            - name: ENV
+              value: "dev"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-dev-diamant-service
+  namespace: dev
+spec:
+  selector:
+    app: app-dev-diamant
+    queue: diamant
+  ports:
+    - protocol: TCP
+      port: 8000
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app-dev-diamant-ingress
+  namespace: dev
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`dev-diamant.192.168.1.52.nip.io`)
+      kind: Rule
+      services:
+        - name: app-dev-diamant-service
+          port: 8000
+---
+
+---
