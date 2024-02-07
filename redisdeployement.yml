@@ -24,17 +24,17 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis
+  name: redis-exporter
 spec:
   selector:
     matchLabels:
-      app: redis
+      app: redis-exporter
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: redis
+        app: redis-exporter
     spec:
       containers:
       - name: redis-exporter
