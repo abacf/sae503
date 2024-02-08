@@ -13,4 +13,4 @@ if [ -z "$QUEUE_NAME" ]; then
   QUEUE_NAME="DEFAUT"
 fi
 
-python3 /app/app.py --redis-host "$REDIS_HOST" --redis-port "$REDIS_PORT" --queue-name "$QUEUE_NAME"
+poetry run /app/app.py --redis-host "$REDIS_HOST" --redis-port "$REDIS_PORT" --queue-name "$QUEUE_NAME"
