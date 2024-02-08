@@ -38,11 +38,10 @@ spec:
               mountPath: /data
         - name: redis-exporter
           image: oliver006/redis_exporter
+          args:
+            - "--redis.addr=redis-{{ namespace }}-service:6379"
           ports:
             - containerPort: 9121
-          volumeMounts:
-            - name: redis-{{ namespace }}-persistent-storage
-              mountPath: /data
       volumes:
         - name: redis-{{ namespace }}-persistent-storage
           persistentVolumeClaim:
