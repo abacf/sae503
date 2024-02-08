@@ -22,25 +22,27 @@ spec:
     metadata:
       labels:
         app: traefik
+      annotations:
+        # Prometheus will scrape metrics, and only once, on port 80
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+
     spec:
       serviceAccountName: traefik-ingress-controller
       containers:
         - name: traefik
           image: traefik:v2.10
           args:
-            - --api.insecure
-            - --accesslog
-            - --entrypoints.web.Address=:80
-            - --entrypoints.websecure.Address=:443
-            - --providers.kubernetescrd
-            - --providers.kubernetescrd.allowCrossNamespace=true
-            - --metrics.prometheus=true
+            - --configfile=/config/static.yaml
+          volumeMounts:
+            - name: static-config
+              mountPath: "/config"
           ports:
             - name: web
               containerPort: 80
             - name: websecure
               containerPort: 443
-            - name: admin
-              containerPort: 8080
-            - name: prometheus
-              containerPort: 9090
+      volumes:
+        - name: static-config
+          configMap:
+            name: traefik-static-config

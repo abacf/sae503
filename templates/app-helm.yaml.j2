@@ -98,14 +98,14 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: app-{{ namespace }}-{{ queue_name }}
+      app: app-{{ namespace }}
       queue: {{ queue_name }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: app-{{ namespace }}-{{ queue_name }}
+        app: app-{{ namespace }}
         queue: {{ queue_name }}
     spec:
       containers:
@@ -133,8 +133,25 @@ spec:
     app: app-{{ namespace }}-{{ queue_name }}
     queue: {{ queue_name }}
   ports:
-    - protocol: TCP
+    - name: web
+      protocol: TCP
       port: 8000
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor 
+metadata:
+  name: app-{{ namespace }}-{{ queue_name }}-metrics
+selector:
+  matchLabels:
+    app: app-{{ namespace }}
+    queue: {{ queue_name }}
+namespaceSelector:
+  matchNames:
+    - {{ namespace }}
+endpoints:
+- port: web
+  path: /metrics
 
 ---
 apiVersion: traefik.io/v1alpha1
