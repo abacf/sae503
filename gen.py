@@ -23,4 +23,5 @@ env = {
 
 for namespace in env:
   with open(f"deploy-{namespace}.yaml", "wt") as f:
-    f.write(template.render(env={namespace: env[namespace]}, image="ghcr.io/abacf/sae503:1.0.0", base_domain="192.168.1.52.nip.io",))
+    f.write(template.render(env={namespace: env[namespace]}, image="ghcr.io/abacf/sae503:1.1.0", base_domain="172.18.200.33.nip.io",))
+    
