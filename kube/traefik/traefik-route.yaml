@@ -9,7 +9,7 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`dashboard.172.18.200.171.nip.io`)
+      match: Host(`dashboard.192.168.1.52.nip.io`)
       services:
         - name: api@internal
           kind: TraefikService
@@ -25,7 +25,7 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`metrics.172.18.200.171.nip.io`) || PathPrefix(`/metrics`)
+      match: Host(`metrics.192.168.1.52.nip.io`) || PathPrefix(`/metrics`)
       services:
         - name: prometheus@internal
           kind: TraefikService

@@ -1,23 +1,7 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus-service
-  namespace: monitoring
-spec:
-  selector:
-    app.kubernetes.io/name: prometheus
-  type: ClusterIP
-  ports:
-    - name: prometheus
-      protocol: TCP
-      port: 9090
-
----
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: prometheus-ingressroute
-  namespace: monitoring
 spec:
   entryPoints:
     - web
@@ -25,5 +9,5 @@ spec:
     - match: Host(`prometheus.192.168.1.52.nip.io`)
       kind: Rule
       services:
-        - name: prometheus-service
+        - name: prometheus-k8s
           port: 9090

@@ -22,11 +22,6 @@ spec:
     metadata:
       labels:
         app: traefik
-      annotations:
-        # Prometheus will scrape metrics, and only once, on port 80
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "80"
-
     spec:
       serviceAccountName: traefik-ingress-controller
       containers:
