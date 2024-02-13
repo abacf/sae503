@@ -9,7 +9,7 @@ template = env.get_template("app-template.yaml.j2")
 env = {
   "dev": {"queues": ["rubis", "emeraude", "saphir", "diamant"]},
   "prod": {"queues": ["rubis", "emeraude", "saphir", "diamant"]},
-  "test": {"queues": ["rubis", "emeraude", "saphir", "diamant"]},
+  "staging": {"queues": ["rubis", "emeraude", "saphir", "diamant"]},
 }
 
 
@@ -18,7 +18,7 @@ for namespace in env:
     f.write(
       template.render(
         env={namespace: env[namespace]},
-        image="ghcr.io/abacf/sae503:2.0.3",
+        image="ghcr.io/abacf/sae503:2.1.1",
         base_domain="192.168.1.52.nip.io",
       )
     )
