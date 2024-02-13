@@ -10,6 +10,8 @@ spec:
   routes:
     - kind: Rule
       match: Host(`dashboard.192.168.1.52.nip.io`)
+      middlewares:
+        - name: basic-auth
       services:
         - name: api@internal
           kind: TraefikService
@@ -25,7 +27,7 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`metrics.192.168.1.52.nip.io`) || PathPrefix(`/metrics`)
+      match: Path(`/traefik/metrics`)
       services:
         - name: prometheus@internal
           kind: TraefikService
