@@ -149,7 +149,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`{{ namespace }}-{{ queue_name }}.{{ base_domain }}`)
+    - match: Host(`{{ namespace + '-' if namespace != 'prod' else '' }}{{ queue_name }}.{{ base_domain }}`)
       kind: Rule
       services:
         - name: app-{{ namespace }}-{{ queue_name }}-service
