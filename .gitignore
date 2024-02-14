@@ -1,4 +1,3 @@
-kube/prometheus/alertmanager.yml
-kube/prometheus/alertmanager-config.yml
-kube/prometheus/alertmanager/base/alertmanager-smtp.yml
+alertmanager-smtp.yml
 deploy-*.yaml
+test.py
