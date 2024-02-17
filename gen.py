@@ -24,7 +24,7 @@ for namespace in env:
     f.write(
       template.render(
         env={namespace: env[namespace]},
-        image="ghcr.io/abacf/sae503:2.1.1",
+        image="ghcr.io/abacf/sae503:2.1.2",
         base_domain="192.168.1.52.nip.io",
       )
     )
